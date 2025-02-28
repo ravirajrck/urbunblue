@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance | UrbunBlue</title>
+    <title>Quiz App</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -20,88 +19,101 @@
             align-items: center;
             height: 100vh;
         }
-
         .container {
             text-align: center;
             padding: 40px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
         }
-
         h1 {
             font-size: 3rem;
             color: #ffea00;
             margin-bottom: 20px;
         }
-
         p {
             font-size: 1.5rem;
             color: #ffea00;
             margin-bottom: 30px;
         }
-
-        #countdown {
-            font-size: 2rem;
-            color: white;
+        .button-container {
+            margin-top: 20px;
         }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            p {
-                font-size: 1.2rem;
-            }
-
-            #countdown {
-                font-size: 1.5rem;
-            }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .prev-btn {
+            background-color: #ffea00;
+            color: #000;
+        }
+        .next-btn {
+            background-color: #fff;
+            color: #6a11cb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="content">
-            <h1>We're Under Maintenance</h1>
-            <p>Thank you for visiting UrbunBlue. Our site is currently undergoing scheduled maintenance and updates. We'll be back soon!</p>
-            <div id="countdown"></div>
+        <h1>Quiz App</h1>
+        <p id="question">Loading question...</p>
+        <div class="button-container">
+            <button class="prev-btn" onclick="prevQuestion()" id="prevBtn" disabled="disabled">Previous</button>
+            <button class="next-btn" onclick="nextQuestion()" id="nextBtn">Next</button>
         </div>
     </div>
     <script>
-        // Set the date we're counting down to
-        const countDownDate = new Date("Jun 30, 2024 15:00:00").getTime();
+        const questions = [
+            { id: 1, text: "What are React Hooks?" },
+            { id: 2, text: "Explain the difference between useEffect and useLayoutEffect." },
+            { id: 3, text: "What is React Fiber and how does it improve performance?" },
+            { id: 4, text: "What are the benefits of using React Context API over Redux?" },
+            { id: 5, text: "Explain the concept of Higher-Order Components (HOC) in React." },
+            { id: 6, text: "Difference b/w JavaScript & TypeScript?" },
+            { id: 7, text: "Difference b/w Spread and Rest operator?" },
+            { id: 8, text: "What is Hoisting in JS?" },
+            { id: 9, text: "What is Promise?" },
+            { id: 10, text: "What is async / await in JS?" },
+            { id: 11, text: "Difference b/w map() & filter()?" },
+            { id: 12, text: "What is Closure?" },
+            { id: 13, text: "What is Callback function?" }
+        ];
 
-        // Update the count down every 1 second
-        const countdownFunction = setInterval(() => {
-            // Get today's date and time
-            const now = new Date().getTime();
+        let remainingQuestions = [...questions];
+        let history = [];
+        let currentIndex = -1;
 
-            // Find the distance between now and the count down date
-            const distance = countDownDate - now;
-
-            // Time calculations for days, hours, minutes and seconds
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Display the result in the element with id="countdown"
-            document.getElementById("countdown").innerHTML = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s `;
-
-            // If the count down is over, write some text
-            if (distance < 0) {
-                clearInterval(countdownFunction);
-                document.getElementById("countdown").innerHTML = "Maintenance Complete!";
+        function showQuestion() {
+            if (currentIndex >= 0) {
+                document.getElementById("question").textContent = history[currentIndex].text;
             }
-        }, 1000);
+            document.getElementById("prevBtn").disabled = (currentIndex <= 0);
+            document.getElementById("nextBtn").disabled = (remainingQuestions.length === 0);
+        }
+
+        function nextQuestion() {
+            if (remainingQuestions.length > 0) {
+                let randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+                let nextQ = remainingQuestions.splice(randomIndex, 1)[0];
+                history.push(nextQ);
+                currentIndex++;
+                showQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showQuestion();
+            }
+        }
+
+        nextQuestion();
     </script>
 </body>
 </html>
